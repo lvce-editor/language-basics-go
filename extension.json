@@ -1,0 +1,12 @@
+{
+  "id": "builtin.language-basics-go",
+  "name": "Language Basics Go",
+  "description": "Provides syntax highlighting and bracket matching in Gp files.",
+  "languages": [
+    {
+      "id": "go",
+      "extensions": [".go"],
+      "configuration": "./languageConfiguration.json"
+    }
+  ]
+}
