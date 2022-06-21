@@ -1,4 +1,4 @@
-# Language Basics GO
+# Language Basics Go
 
 ## Contributing
 
