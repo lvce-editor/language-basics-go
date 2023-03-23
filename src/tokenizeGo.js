@@ -30,6 +30,7 @@ export const TokenType = {
   NewLine: 771,
   Keyword: 951,
   VariableName: 952,
+  LanguageConstant: 953,
 }
 
 export const TokenMap = {
@@ -51,6 +52,7 @@ export const TokenMap = {
   [TokenType.NewLine]: 'NewLine',
   [TokenType.Keyword]: 'Keyword',
   [TokenType.VariableName]: 'VariableName',
+  [TokenType.LanguageConstant]: 'LanguageConstant',
 }
 
 const RE_WHITESPACE = /^\s+/
@@ -92,17 +94,31 @@ const RE_SQUARE_OPEN_SQUARE_OPEN = /^\[\[/
 const RE_SQUARE_CLOSE_SQUARE_CLOSE = /^\]\]/
 const RE_STRING_MULTILINE_CONTENT = /^.+?(?=\]\]|$)/s
 const RE_KEYWORD =
-  /^(?:var|type|switch|struct|select|return|range|package|map|interface|import|if|goto|go|func|default|continue|const|chan|case|break)\b/
+  /^(?:var|type|true|switch|struct|select|return|range|package|map|interface|import|if|goto|go|func|false|default|continue|const|chan|case|break)\b/
 const RE_TEXT = /^.+/s
 
 export const initialLineState = {
   state: State.TopLevelContent,
 }
 
+export const hasArrayReturn = true
+
+/**
+ *
+ * @param {*} lineStateA
+ * @param {*} lineStateB
+ * @returns
+ */
 export const isLineStateEqual = (lineStateA, lineStateB) => {
   return lineStateA.state === lineStateB.state
 }
 
+/**
+ *
+ * @param {string} line
+ * @param {*} lineState
+ * @returns
+ */
 export const tokenizeLine = (line, lineState) => {
   let next = null
   let index = 0
@@ -117,7 +133,15 @@ export const tokenizeLine = (line, lineState) => {
           token = TokenType.Whitespace
           state = State.TopLevelContent
         } else if ((next = part.match(RE_KEYWORD))) {
-          token = TokenType.Keyword
+          switch (next[0]) {
+            case 'true':
+            case 'false':
+              token = TokenType.LanguageConstant
+              break
+            default:
+              token = TokenType.Keyword
+              break
+          }
           state = State.TopLevelContent
         } else if ((next = part.match(RE_VARIABLE_NAME))) {
           token = TokenType.VariableName
@@ -148,11 +172,9 @@ export const tokenizeLine = (line, lineState) => {
         state
         throw new Error('no')
     }
-    index += next[0].length
-    tokens.push({
-      type: token,
-      length: next[0].length,
-    })
+    const tokenLength = next[0].length
+    index += tokenLength
+    tokens.push(token, tokenLength)
   }
   return {
     state,
