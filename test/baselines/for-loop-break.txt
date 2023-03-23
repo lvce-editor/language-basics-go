@@ -1,0 +1,15 @@
+KeywordControl
+Whitespace
+Punctuation
+NewLine
+Whitespace
+VariableName
+Punctuation
+VariableName
+Punctuation
+Text
+NewLine
+Whitespace
+KeywordControl
+NewLine
+Punctuation

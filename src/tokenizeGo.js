@@ -31,6 +31,7 @@ export const TokenType = {
   Keyword: 951,
   VariableName: 952,
   LanguageConstant: 953,
+  KeywordControl: 954,
 }
 
 export const TokenMap = {
@@ -53,6 +54,7 @@ export const TokenMap = {
   [TokenType.Keyword]: 'Keyword',
   [TokenType.VariableName]: 'VariableName',
   [TokenType.LanguageConstant]: 'LanguageConstant',
+  [TokenType.KeywordControl]: 'KeywordControl',
 }
 
 const RE_WHITESPACE = /^\s+/
@@ -84,7 +86,7 @@ const RE_ROUND_CLOSE = /^\)/
 const RE_DOT = /^\./
 const RE_EQUAL_SIGN = /^=/
 const RE_SINGLE_QUOTE = /^'/
-const RE_PUNCTUATION = /^[\(\)=\+\-><\.,\/\*\^\[\]\{\}\|:]/
+const RE_PUNCTUATION = /^[\(\)=\+\-><\.,\/\*\^\[\]\{\}\|:\;]/
 const RE_ANYTHING_UNTIL_END = /^.+/s
 const RE_START_OF_FUNCTION = /^( )*\(/
 const RE_COLON_COLON = /^::/
@@ -94,7 +96,7 @@ const RE_SQUARE_OPEN_SQUARE_OPEN = /^\[\[/
 const RE_SQUARE_CLOSE_SQUARE_CLOSE = /^\]\]/
 const RE_STRING_MULTILINE_CONTENT = /^.+?(?=\]\]|$)/s
 const RE_KEYWORD =
-  /^(?:var|type|true|switch|struct|select|return|range|package|map|interface|import|if|goto|go|func|false|default|continue|const|chan|case|break)\b/
+  /^(?:var|type|true|switch|struct|select|return|range|package|map|interface|import|if|goto|go|for|func|false|default|continue|const|chan|case|break)\b/
 const RE_TEXT = /^.+/s
 
 export const initialLineState = {
@@ -137,6 +139,22 @@ export const tokenizeLine = (line, lineState) => {
             case 'true':
             case 'false':
               token = TokenType.LanguageConstant
+              break
+            case 'as':
+            case 'switch':
+            case 'default':
+            case 'case':
+            case 'else':
+            case 'if':
+            case 'break':
+            case 'throw':
+            case 'for':
+            case 'try':
+            case 'catch':
+            case 'finally':
+            case 'continue':
+            case 'while':
+              token = TokenType.KeywordControl
               break
             default:
               token = TokenType.Keyword
