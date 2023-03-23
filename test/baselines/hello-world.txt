@@ -5,7 +5,9 @@ NewLine
 NewLine
 Keyword
 Whitespace
-Text
+Punctuation
+String
+Punctuation
 NewLine
 NewLine
 Keyword
@@ -21,7 +23,10 @@ VariableName
 Punctuation
 VariableName
 Punctuation
-Text
+Punctuation
+String
+Punctuation
+Punctuation
 NewLine
 Punctuation
 NewLine

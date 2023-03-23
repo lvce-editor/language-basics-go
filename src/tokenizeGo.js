@@ -61,8 +61,6 @@ const RE_WHITESPACE = /^\s+/
 const RE_WHITESPACE_SINGLE_LINE = /^( |\t)+/
 const RE_WHITESPACE_NEWLINE = /^\n/
 const RE_CONSTANT = /^(true|false|null)/
-const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^"\n]+/
-const RE_STRING_SINGLE_QUOTE_CONTENT = /^[^'\n]+/
 const RE_DOUBLE_QUOTE = /^"/
 const RE_CURLY_OPEN = /^\{/
 const RE_CURLY_CLOSE = /^\}/
@@ -98,6 +96,14 @@ const RE_STRING_MULTILINE_CONTENT = /^.+?(?=\]\]|$)/s
 const RE_KEYWORD =
   /^(?:var|type|true|switch|struct|select|return|range|package|map|interface|import|if|goto|go|for|func|false|default|continue|const|chan|case|break)\b/
 const RE_TEXT = /^.+/s
+const RE_QUOTE_SINGLE = /^'/
+const RE_QUOTE_DOUBLE = /^"/
+const RE_QUOTE_BACKTICK = /^`/
+const RE_STRING_SINGLE_QUOTE_CONTENT = /^[^'\\]+/
+const RE_STRING_DOUBLE_QUOTE_CONTENT = /^[^"\\]+/
+const RE_STRING_BACKTICK_QUOTE_CONTENT = /^[^`\\\$]+/
+const RE_STRING_ESCAPE = /^\\./
+const RE_BACKSLASH = /^\\/
 
 export const initialLineState = {
   state: State.TopLevelContent,
@@ -173,11 +179,31 @@ export const tokenizeLine = (line, lineState) => {
         } else if ((next = part.match(RE_PUNCTUATION))) {
           token = TokenType.Punctuation
           state = State.TopLevelContent
+        } else if ((next = part.match(RE_QUOTE_DOUBLE))) {
+          token = TokenType.Punctuation
+          state = State.InsideDoubleQuoteString
         } else if ((next = part.match(RE_TEXT))) {
           token = TokenType.Text
           state = State.TopLevelContent
         } else {
           part //?
+          throw new Error('no')
+        }
+        break
+      case State.InsideDoubleQuoteString:
+        if ((next = part.match(RE_QUOTE_DOUBLE))) {
+          token = TokenType.Punctuation
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_STRING_DOUBLE_QUOTE_CONTENT))) {
+          token = TokenType.String
+          state = State.InsideDoubleQuoteString
+        } else if ((next = part.match(RE_STRING_ESCAPE))) {
+          token = TokenType.String
+          state = State.InsideDoubleQuoteString
+        } else if ((next = part.match(RE_BACKSLASH))) {
+          token = TokenType.String
+          state = State.InsideDoubleQuoteString
+        } else {
           throw new Error('no')
         }
         break

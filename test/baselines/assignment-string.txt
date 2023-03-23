@@ -3,4 +3,6 @@ Whitespace
 Punctuation
 Punctuation
 Whitespace
-Text
+Punctuation
+String
+Punctuation
