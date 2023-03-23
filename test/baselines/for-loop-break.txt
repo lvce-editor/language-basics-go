@@ -7,7 +7,10 @@ VariableName
 Punctuation
 VariableName
 Punctuation
-Text
+Punctuation
+String
+Punctuation
+Punctuation
 NewLine
 Whitespace
 KeywordControl

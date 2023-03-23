@@ -29,7 +29,10 @@ VariableName
 Punctuation
 VariableName
 Punctuation
-Text
+Punctuation
+String
+Punctuation
+Punctuation
 NewLine
 KeywordControl
 Punctuation
@@ -39,6 +42,9 @@ VariableName
 Punctuation
 VariableName
 Punctuation
-Text
+Punctuation
+String
+Punctuation
+Punctuation
 NewLine
 Punctuation
