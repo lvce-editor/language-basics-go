@@ -5,6 +5,7 @@ export const State = {
   TopLevelContent: 1,
   InsideDoubleQuoteString: 2,
   InsideLineComment: 3,
+  InsideBacktickString: 4,
 }
 
 /**
@@ -32,6 +33,8 @@ export const TokenType = {
   VariableName: 952,
   LanguageConstant: 953,
   KeywordControl: 954,
+  KeywordImport: 955,
+  KeywordReturn: 956,
 }
 
 export const TokenMap = {
@@ -55,6 +58,8 @@ export const TokenMap = {
   [TokenType.VariableName]: 'VariableName',
   [TokenType.LanguageConstant]: 'LanguageConstant',
   [TokenType.KeywordControl]: 'KeywordControl',
+  [TokenType.KeywordImport]: 'KeywordImport',
+  [TokenType.KeywordReturn]: 'KeywordReturn',
 }
 
 const RE_WHITESPACE = /^\s+/
@@ -162,6 +167,12 @@ export const tokenizeLine = (line, lineState) => {
             case 'while':
               token = TokenType.KeywordControl
               break
+            case 'import':
+              token = TokenType.KeywordImport
+              break
+            case 'return':
+              token = TokenType.KeywordReturn
+              break
             default:
               token = TokenType.Keyword
               break
@@ -185,6 +196,9 @@ export const tokenizeLine = (line, lineState) => {
         } else if ((next = part.match(RE_TEXT))) {
           token = TokenType.Text
           state = State.TopLevelContent
+        } else if ((next = part.match(RE_QUOTE_BACKTICK))) {
+          token = TokenType.String
+          state = State.InsideBacktickString
         } else {
           part //?
           throw new Error('no')
@@ -203,6 +217,23 @@ export const tokenizeLine = (line, lineState) => {
         } else if ((next = part.match(RE_BACKSLASH))) {
           token = TokenType.String
           state = State.InsideDoubleQuoteString
+        } else {
+          throw new Error('no')
+        }
+        break
+      case State.InsideBacktickString:
+        if ((next = part.match(RE_QUOTE_BACKTICK))) {
+          token = TokenType.Punctuation
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_STRING_BACKTICK_QUOTE_CONTENT))) {
+          token = TokenType.String
+          state = State.InsideBacktickString
+        } else if ((next = part.match(RE_STRING_ESCAPE))) {
+          token = TokenType.String
+          state = State.InsideBacktickString
+        } else if ((next = part.match(RE_BACKSLASH))) {
+          token = TokenType.String
+          state = State.InsideBacktickString
         } else {
           throw new Error('no')
         }

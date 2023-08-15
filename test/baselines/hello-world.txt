@@ -3,7 +3,7 @@ Whitespace
 VariableName
 NewLine
 NewLine
-Keyword
+KeywordImport
 Whitespace
 Punctuation
 String
