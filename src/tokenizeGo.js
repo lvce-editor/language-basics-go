@@ -99,7 +99,7 @@ const RE_SQUARE_OPEN_SQUARE_OPEN = /^\[\[/
 const RE_SQUARE_CLOSE_SQUARE_CLOSE = /^\]\]/
 const RE_STRING_MULTILINE_CONTENT = /^.+?(?=\]\]|$)/s
 const RE_KEYWORD =
-  /^(?:var|type|true|switch|struct|select|return|range|package|map|interface|import|if|goto|go|for|func|false|default|continue|const|chan|case|break|nil)\b/
+  /^(?:var|type|true|switch|struct|select|return|range|package|map|interface|import|if|goto|go|for|func|false|default|continue|const|chan|case|break|nil|else)\b/
 const RE_TEXT = /^.+/s
 const RE_QUOTE_SINGLE = /^'/
 const RE_QUOTE_DOUBLE = /^"/
