@@ -179,6 +179,9 @@ export const tokenizeLine = (line, lineState) => {
             case 'int64':
               token = TokenType.TypePrimitive
               break
+            case 'range':
+              token = TokenType.FunctionName
+              break
             default:
               token = TokenType.Keyword
               break
