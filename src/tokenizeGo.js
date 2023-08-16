@@ -20,7 +20,7 @@ export const TokenType = {
   String: 50,
   Numeric: 30,
   FunctionName: 112,
-  TypeNamePrimitive: 36,
+  TypePrimitive: 36,
   Text: 117,
   PunctuationTag: 228,
   TagName: 118,
@@ -45,7 +45,7 @@ export const TokenMap = {
   [TokenType.String]: 'String',
   [TokenType.Numeric]: 'Numeric',
   [TokenType.FunctionName]: 'FunctionName',
-  [TokenType.TypeNamePrimitive]: 'TypeNamePrimitive',
+  [TokenType.TypePrimitive]: 'TypePrimitive',
   [TokenType.Text]: 'Text',
   [TokenType.PunctuationTag]: 'PunctuationTag',
   [TokenType.TagName]: 'TagName',
@@ -99,7 +99,7 @@ const RE_SQUARE_OPEN_SQUARE_OPEN = /^\[\[/
 const RE_SQUARE_CLOSE_SQUARE_CLOSE = /^\]\]/
 const RE_STRING_MULTILINE_CONTENT = /^.+?(?=\]\]|$)/s
 const RE_KEYWORD =
-  /^(?:var|type|true|switch|struct|select|return|range|package|map|interface|import|if|goto|go|for|func|false|default|continue|const|chan|case|break|nil|else)\b/
+  /^(?:var|type|true|switch|struct|select|return|range|package|map|interface|import|if|goto|go|for|func|false|default|continue|const|chan|case|break|nil|else|string|int64|bool)\b/
 const RE_TEXT = /^.+/s
 const RE_QUOTE_SINGLE = /^'/
 const RE_QUOTE_DOUBLE = /^"/
@@ -173,6 +173,11 @@ export const tokenizeLine = (line, lineState) => {
               break
             case 'return':
               token = TokenType.KeywordReturn
+              break
+            case 'bool':
+            case 'string':
+            case 'int64':
+              token = TokenType.TypePrimitive
               break
             default:
               token = TokenType.Keyword
