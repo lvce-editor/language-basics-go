@@ -1,8 +1,6 @@
 VariableName
-Punctuation
-VariableName
 Whitespace
 Punctuation
-Whitespace
 Punctuation
+Whitespace
 VariableName
