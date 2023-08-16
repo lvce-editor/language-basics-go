@@ -6,6 +6,7 @@ export const State = {
   InsideDoubleQuoteString: 2,
   InsideLineComment: 3,
   InsideBacktickString: 4,
+  AfterKeywordFunc: 5,
 }
 
 /**
@@ -44,7 +45,7 @@ export const TokenMap = {
   [TokenType.Comment]: 'Comment',
   [TokenType.String]: 'String',
   [TokenType.Numeric]: 'Numeric',
-  [TokenType.FunctionName]: 'FunctionName',
+  [TokenType.FunctionName]: 'Function',
   [TokenType.TypePrimitive]: 'TypePrimitive',
   [TokenType.Text]: 'Text',
   [TokenType.PunctuationTag]: 'PunctuationTag',
@@ -146,6 +147,7 @@ export const tokenizeLine = (line, lineState) => {
           token = TokenType.Whitespace
           state = State.TopLevelContent
         } else if ((next = part.match(RE_KEYWORD))) {
+          state = State.TopLevelContent
           switch (next[0]) {
             case 'true':
             case 'false':
@@ -182,11 +184,14 @@ export const tokenizeLine = (line, lineState) => {
             case 'range':
               token = TokenType.FunctionName
               break
+            case 'func':
+              token = TokenType.Keyword
+              state = State.AfterKeywordFunc
+              break
             default:
               token = TokenType.Keyword
               break
           }
-          state = State.TopLevelContent
         } else if ((next = part.match(RE_VARIABLE_NAME))) {
           token = TokenType.VariableName
           state = State.TopLevelContent
@@ -253,6 +258,23 @@ export const tokenizeLine = (line, lineState) => {
           state = State.TopLevelContent
         } else {
           throw new Error('no')
+        }
+        break
+      case State.AfterKeywordFunc:
+        if ((next = part.match(RE_WHITESPACE))) {
+          token = TokenType.Whitespace
+          state = State.AfterKeywordFunc
+        } else if ((next = part.match(RE_VARIABLE_NAME))) {
+          token = TokenType.FunctionName
+          state = State.TopLevelContent
+        } else if ((next = part.match(RE_LINE_COMMENT))) {
+          token = TokenType.Comment
+          state = State.AfterKeywordFunc
+        } else if ((next = part.match(RE_ANYTHING_UNTIL_END))) {
+          token = TokenType.Text
+          state = State.TopLevelContent
+        } else {
+          throw new Error(`no`)
         }
         break
       default:
