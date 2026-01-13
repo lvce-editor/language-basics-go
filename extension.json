@@ -5,9 +5,12 @@
   "languages": [
     {
       "id": "go",
-      "extensions": [".go"],
+      "extensions": [
+        ".go"
+      ],
       "configuration": "./languageConfiguration.json",
       "tokenize": "src/tokenizeGo.js"
     }
-  ]
+  ],
+  "repository": "https://github.com/lvce-editor/language-basics-go"
 }
